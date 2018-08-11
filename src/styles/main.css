@@ -1,0 +1,10 @@
+body {
+  color: tomato;
+  background-color: #fff; }
+
+.button {
+  display: inline-block; }
+
+body {
+  background: green;
+  color: red; }
