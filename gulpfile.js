@@ -5,11 +5,13 @@ var include     = require('gulp-include'); //
 var browserSync = require('browser-sync'); // live reload browser
 var imagemin    = require('gulp-imagemin'); // Подключаем библиотеку для работы с изображениями
 var pngquant    = require('imagemin-pngquant'); // Подключаем библиотеку для работы с png
-var debug       = require('gulp-debug')
+var debug       = require('gulp-debug');
+var del         = require('del');
 
 gulp.task('img', function() {
   return gulp.src('./src/images/**/*') // Берем все изображения из app
       .pipe(imagemin({ // Сжимаем их с наилучшими настройками
+          optimizationLevel: 5,
           interlaced: true,
           progressive: true,
           svgoPlugins: [{removeViewBox: false}],
@@ -49,7 +51,7 @@ gulp.task('fonts', function() {
   .pipe(gulp.dest('./dist/fonts'));
 });
 
-gulp.task("scripts", function() {
+gulp.task('scripts', function() {
   return
   console.log("-- gulp is running task 'scripts'");
    gulp.src("./src/js/main.js")
@@ -58,8 +60,6 @@ gulp.task("scripts", function() {
     .pipe(gulp.dest("./dist/js"));
 });
 
-gulp.task("default", ["scripts"]);
-
 gulp.task('sass', function () {
   return gulp.src('./src/styles/**/*.{scss, sass}')
     .pipe(sass().on('error', sass.logError))
@@ -67,8 +67,16 @@ gulp.task('sass', function () {
     .pipe(browserSync.reload({stream: true})); // Обновляем CSS на странице при изменении
 });
 
-gulp.task('watch', ['browser-sync', 'sass', 'html', 'fonts', 'img'], function () {
-  return
+gulp.task('clean', function(){
+  return del.sync('dist');
+});
+
+gulp.task('build', ['clean', 'sass', 'fonts', 'scripts', 'html', 'img'], function(){
+  console.log('building of project done');
+});
+
+gulp.task('watch', ['browser-sync', 'build'], function () {
   gulp.watch('./src/index.html', ['html']);
   gulp.watch('./src/styles/**/*.{scss, sass}', ['sass']);
-});
+  gulp.watch('.src/js/**/*.js', ['js']);
+})
