@@ -72,11 +72,10 @@ gulp.task('clean', function(){
 });
 
 gulp.task('build', ['clean', 'sass', 'fonts', 'scripts', 'html', 'img'], function(){
-  console.log('building of project done');
 });
 
 gulp.task('watch', ['browser-sync', 'build'], function () {
   gulp.watch('./src/index.html', ['html']);
   gulp.watch('./src/styles/**/*.{scss, sass}', ['sass']);
-  gulp.watch('.src/js/**/*.js', ['js']);
+  gulp.watch('./src/js/**/*.js', ['js']);
 })
