@@ -12,7 +12,7 @@ var del         = require('del');
 var pug         = require('gulp-pug');
 
 gulp.task('img', function() {
-  return gulp.src('./src/images/**/*') // Берем все изображения из app
+  return gulp.src('./src/images/**/*') // Берем все изображения из src
       .pipe(imagemin({ // Сжимаем их с наилучшими настройками
           optimizationLevel: 5,
           interlaced: true,
@@ -20,7 +20,7 @@ gulp.task('img', function() {
           svgoPlugins: [{removeViewBox: false}],
           use: [pngquant()]
       }))
-      .pipe(gulp.dest('./dist/images')); // Выгружаем на продакшен
+      .pipe(gulp.dest('./dist/images'));
 });
 
 gulp.task('images', function(cb) {
