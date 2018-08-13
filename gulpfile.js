@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp        = require('gulp'); // gulp
 var sass        = require('gulp-sass'); // compile scss to css
 var imageop     = require('gulp-image-optimization'); // image optimization
