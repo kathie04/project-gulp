@@ -9,6 +9,7 @@ var imagemin    = require('gulp-imagemin'); // Подключаем библио
 var pngquant    = require('imagemin-pngquant'); // Подключаем библиотеку для работы с png
 var debug       = require('gulp-debug');
 var del         = require('del');
+var pug         = require('gulp-pug');
 
 gulp.task('img', function() {
   return gulp.src('./src/images/**/*') // Берем все изображения из app
@@ -42,7 +43,16 @@ gulp.task('browser-sync', function () {
   });
 });
 
-gulp.task('html', function() {
+gulp.task('pug', function() {
+  return gulp.src("./src/**/*.pug")
+    .pipe(pug({
+      pretty: true
+    }))  
+    .pipe(gulp.dest("./src"))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('html', ['pug'], function() {
   return gulp.src('./src/index.html')
   .pipe(gulp.dest('./dist'))
   .pipe(browserSync.reload({stream: true})); // Обновляем
@@ -77,7 +87,7 @@ gulp.task('build', ['clean', 'sass', 'fonts', 'scripts', 'html', 'img'], functio
 });
 
 gulp.task('watch', ['browser-sync', 'build'], function () {
-  gulp.watch('./src/index.html', ['html']);
+  gulp.watch('./src/**/*.pug', ['pug', 'html']);
   gulp.watch('./src/styles/**/*.{scss, sass}', ['sass']);
   gulp.watch('./src/js/**/*.js', ['js']);
 })
