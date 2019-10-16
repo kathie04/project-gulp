@@ -1,17 +1,17 @@
-'use strict';
 
-var gulp         = require('gulp'); // gulp
-var sass         = require('gulp-sass'); // compile scss to css
-var imageop      = require('gulp-image-optimization'); // image optimization
-var include      = require('gulp-include'); //
-var browserSync  = require('browser-sync'); // live reload browser
-var imagemin     = require('gulp-imagemin'); // Подключаем библиотеку для работы с изображениями
-var pngquant     = require('imagemin-pngquant'); // Подключаем библиотеку для работы с png
-var debug        = require('gulp-debug');
-var del          = require('del');
-var sourcemaps   = require('gulp-sourcemaps');
-var cleanCSS     = require('gulp-clean-css');
-var autoprefixer = require('gulp-autoprefixer');
+const gulp         = require('gulp'); // gulp
+const sass         = require('gulp-sass'); // compile scss to css
+const imageop      = require('gulp-image-optimization'); // image optimization
+const include      = require('gulp-include'); //
+const browserSync  = require('browser-sync'); // live reload browser
+const imagemin     = require('gulp-imagemin'); // Подключаем библиотеку для работы с изображениями
+const pngquant     = require('imagemin-pngquant'); // Подключаем библиотеку для работы с png
+const debug        = require('gulp-debug');
+const del          = require('del');
+const sourcemaps   = require('gulp-sourcemaps');
+const cleanCSS     = require('gulp-clean-css');
+const autoprefixer = require('gulp-autoprefixer');
+const babel        = require('gulp-babel');
 
 gulp.task('img', function() {
   return gulp.src('./src/images/**/*') // Берем все изображения из src
@@ -60,13 +60,14 @@ gulp.task('fonts', function() {
   .pipe(gulp.dest('./dist/fonts'));
 });
 
+
 gulp.task('scripts', function() {
-  return
-  console.log("-- gulp is running task 'scripts'");
-   gulp.src("./src/js/main.js")
-    .pipe(include())
-      .on('error', console.log)
-    .pipe(gulp.dest("./dist/js"));
+  return gulp.src("./src/js/*.js")
+      .pipe(sourcemaps.init())
+      .pipe(babel({presets: ['@babel/env']}))
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest("./dist/js"))
+      .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('sass', function () {
@@ -93,7 +94,7 @@ gulp.task('build', ['clean', 'sass', 'fonts', 'scripts', 'html', 'img'], functio
 gulp.task('watch', ['browser-sync', 'build'], function () {
   gulp.watch('./src/**/*.html', ['html']);
   gulp.watch('./src/styles/**/*.{scss, sass}', ['sass']);
-  gulp.watch('./src/js/**/*.js', ['js']);
+  gulp.watch('./src/js/**/*.js', ['scripts']);
 })
 
 gulp.task('default', ['watch']);
